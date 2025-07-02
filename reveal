@@ -1,0 +1,90 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Scratch Card - Bad Buddy Bibz</title>
+  <style>
+    html, body {
+      height: 100%;
+      margin: 0;
+      background: #f0f0f0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    #scratch-container {
+      position: relative;
+      width: 75vw;
+      height: 75vh;
+      background-color: white;
+      box-shadow: 0 0 20px rgba(0,0,0,0.2);
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: sans-serif;
+    }
+    #message {
+      font-size: 3em;
+      font-weight: bold;
+      color: #2c3e50;
+      z-index: 1;
+    }
+    canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 2;
+    }
+  </style>
+</head>
+<body>
+  <div id="scratch-container">
+    <div id="message">Bad Buddy Bibz</div>
+    <canvas id="scratch-canvas"></canvas>
+  </div>
+
+  <script>
+    const canvas = document.getElementById('scratch-canvas');
+    const container = document.getElementById('scratch-container');
+    const ctx = canvas.getContext('2d');
+
+    function resizeCanvas() {
+      canvas.width = container.clientWidth;
+      canvas.height = container.clientHeight;
+      ctx.fillStyle = '#c0c0c0'; // Silver scratch layer
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+    }
+
+    resizeCanvas();
+    window.addEventListener('resize', resizeCanvas);
+
+    let isDrawing = false;
+
+    canvas.addEventListener('mousedown', e => {
+      isDrawing = true;
+      scratch(e);
+    });
+
+    canvas.addEventListener('mousemove', e => {
+      if (isDrawing) scratch(e);
+    });
+
+    canvas.addEventListener('mouseup', () => isDrawing = false);
+    canvas.addEventListener('mouseleave', () => isDrawing = false);
+
+    function scratch(e) {
+      const rect = canvas.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+
+      ctx.globalCompositeOperation = 'destination-out';
+      ctx.beginPath();
+      ctx.arc(x, y, 25, 0, Math.PI * 2);
+      ctx.fill();
+    }
+  </script>
+</body>
+</html>
